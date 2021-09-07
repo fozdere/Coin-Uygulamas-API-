@@ -1,0 +1,23 @@
+h1{
+    text-align: center;
+}
+.secenek{
+    text-align: center;
+}
+.butonlar{
+    text-align: center;
+}
+.tablo{
+    padding-left: 15%;
+    padding-right: 15%;
+}
+.alt-tablo{
+    padding-left: 15%;
+    padding-right: 15%;
+}
+.baslik1{
+    text-align: center;
+    color: red;
+    background-color: grey;
+    padding: 15px;
+}

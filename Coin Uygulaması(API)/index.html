@@ -1,0 +1,183 @@
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="stil.css">
+    <title>Document</title>
+</head>
+<body>
+    <br>
+    <h1>Coin</h1>
+    <br>
+    <!--Modal-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Coin Al</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="secenek">
+                    <select class="form-select" name="Seçiniz" id="select">
+                      <option>Seçiniz..</option>
+                        <option value="BTC">BTC</option>
+                        <option value="ETH">ETH</option>
+                        <option value="ADA">ADA</option>
+                    </select>
+                </div>
+                <br>
+                <div class="deger">
+                 <label> <h6 style="text-align:left">para</h6><input type="number" id="coin_miktar" min="0" step="0.01" placeholder="Satın Alınacak Miktar"></label>
+                 <label> <h6 style="padding-left: 75%">Coin</h6><input placeholder="Coin " name="Coin" style="margin-left: 17%" type="text" id="coin_rate" disabled></input></label>
+                 <label><input type="text" id="sat" disabled placeholder="miktar"></input></label>
+                  
+                  
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" id="satinal" onclick="satinal()" class="btn btn-primary">Satın Al</button>
+              <button type="submit" id="satiniz" onclick="satiniz()" class="btn btn-primary">Sat</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="butonlar">
+        <button class="btn btn-outline-primary" onclick="ModalTrigger()" data-bs-toggle="modal" data-bs-target="#exampleModal">Coin Al</button>
+    </div>
+    <br>
+    <div class="tablo">
+      <div class="baslik1">
+      <caption>Coin İşlemler</caption>
+      </div>
+    <table class="table" id="Tablo5">
+        <thead class="table-light">
+          <tr>
+              <th>#</th>
+              <th>COİN</th>
+              <th>ADET</th>
+              <th>SATIN ALINAN</th>
+              <th>İŞLEM</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+
+        </tbody>
+      </table>
+      </div>
+      <div class="alt-tablo" style="display: none">
+        <div class="baslik1">
+          <caption>Coin Satış İşlemleri</caption>
+          </div>
+        <table class="table">
+            <thead class="table-light">
+              <tr>
+                <th style="text-align: center">#</th>
+                <th style="text-align: center">COİN</th>
+                <th style="text-align: center">ADET</th>
+                <th style="text-align: center">SATIŞ</th>
+              </tr>
+            </thead>
+          </table>
+      </div>
+      <div class="alt-tablo" style="display: none">
+        <div class="baslik1">
+          <caption>Coin Kâr İşlemleri</caption>
+          </div>
+        <table class="table">
+            <thead class="table-light">
+              <tr>
+                <th style="text-align: center">#</th>
+                <th style="text-align: center">COİN</th>
+                <th style="text-align: center">COİN ALIM ORANI</th>
+                <th style="text-align: center">COİN SATIŞ ORANI</th>
+                <th style="text-align: center">ADET</th>
+                <th style="text-align: center">KÂR</th>
+              </tr>
+            </thead>
+          </table>
+      </div>
+      <script>
+        var sayac=1;
+        $("#select").on('change', function(){
+          var coin = $("#select").val();
+          $.ajax({
+            url: 'https://rest.coinapi.io/v1/exchangerate/' + coin + '/USD',
+            type: 'GET',
+            headers: {
+              'X-CoinAPI-Key': "8B79B069-9E63-493A-B40F-917E69D2CF2C"
+            },
+            data: {
+
+            },
+            beforeSend: function(){
+
+            },
+            success: function(data){
+              console.log(data)
+              console.log(data.rate)
+              $("#coin_rate").val(data.rate.toFixed(3));
+            }
+          });
+        })
+        $("#coin_miktar").on('change',function(){
+          $("#sat").val((( $("#coin_miktar").val()) * $("#coin_rate").val()).toFixed(3));
+        });
+        function ModalTrigger(){
+          $("#satiniz").hide();
+          $("#satinal").show();
+        }
+        function satinal(){
+          $("#tbody").append("<tr><td>"+sayac+"</td><td>"+$("#select").val()+"</td><td >"+$("#coin_miktar").val()+"</td><td>"+$("#sat").val()+"</td><td> <button data-bs-toggle = 'modal' data-bs-target = '#exampleModal' type='button' class='btn btn-danger'  onclick='satduz()''>SAT</button></td></tr>");
+          sayac++;
+          coin_miktar.value="";
+          sat.value="";
+          coin_rate.value="";
+          select.value="";
+          
+        }
+        var satcoin;
+        var Tablo = document.getElementById("Tablo5"), rIndex;
+        function satduz(){
+          for (let i = 0; i < Tablo.rows.length; i++){
+                    Tablo.rows[i].onclick = function(){
+                        rIndex = this.rowIndex;
+                       //document.getElementById("sat").value = this.cells[2].innerHTML;
+                        document.getElementById("coin_rate").value = this.cells[3].innerHTML;
+                    }
+                }
+        }
+        function satin(){
+          $("#satiniz").show();
+          $("#satinal").hide();
+        // satcoin = document.getElementById("sat").value;
+         satcoin = document.getElementById("coin_rate").value;
+         Tablo.rows[rIndex].cells[2].append(satcoin); 
+         Tablo.rows[rIndex].cells[3].append(satmik);
+         $.ajax({
+            url: 'https://rest.coinapi.io/v1/exchangerate/' + select + '/USD',
+            type: 'GET',
+            headers: {
+              'X-CoinAPI-Key': "8B79B069-9E63-493A-B40F-917E69D2CF2C"
+            },
+            data: {
+
+            },
+            beforeSend: function(){
+
+            },
+            success: function(data){
+              console.log(data)
+              console.log(data.rate)
+              $("#coin_rate").val(data.rate.toFixed(3));
+            }
+          });
+        }
+      </script>
+</body>
+</html>
